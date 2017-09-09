@@ -6,13 +6,16 @@ class TopicsController < ApplicationController
   def index
 
     if (params[:sort]=="vote")
+      @params = "vote"
       @topics = Topic.select("topics.*, count(votes.topic_id) as vote_count")
         .joins("left outer join votes on topics.id=votes.topic_id")
         .group("votes.topic_id, topics.title, topics.id")
         .order("vote_count desc")
 
     else
-      @topics = Topic.order(params[:sort])
+      @params=params[:sort]
+      @topics = Topic.order(@params)
+
     end
   end
 
@@ -73,17 +76,17 @@ class TopicsController < ApplicationController
   def upvote
     @topic = Topic.find(params[:id])
     @topic.votes.create
-    redirect_to(topics_path(params[:sort]))
+    redirect_to(topics_path(sort: params[:sort]))
   end
 
   def downvote
     @topic = Topic.find(params[:id])
       if @topic.votes.count > 0
         @topic.votes.last.destroy
-        redirect_to(topics_path(params[:sort]))
+        redirect_to(topics_path(sort: params[:sort]))
       else
       respond_to do |format|
-        format.html { redirect_to topics_path, notice: "You can't be less popular than zero." }
+        format.html { redirect_to (topics_path(sort: params[:sort])), notice: "You can't be less popular than zero." }
       end
     end
   end

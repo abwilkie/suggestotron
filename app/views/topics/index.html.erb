@@ -16,8 +16,8 @@
       <tr>
         <td><%= link_to topic.title, topic_path(topic) %></td>
         <td><%= pluralize(topic.votes.count, 'vote') %></td>
-        <td><%= button_to '+1', upvote_topic_path(topic), method: :post %></t>
-        <td><%= button_to '-1', downvote_topic_path(topic), method: :post %></t>
+        <td><%= button_to '+1', upvote_topic_path(topic), method: :post, params: { sort: params[:sort] } %></t>
+        <td><%= button_to '-1', downvote_topic_path(topic), method: :post, params: { sort: params[:sort]} %></t>
         <td><%= link_to 'Edit', edit_topic_path(topic) %></td>
         <td><%= link_to 'Delete', topic, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
